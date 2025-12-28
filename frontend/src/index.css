@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.app {
+  display: flex;
+}
+
+.sidebar {
+  width: 200px;
+  background: #111;
+  color: white;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.sidebar li {
+  list-style: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.sidebar .active {
+  background: #333;
+}
+
+.main {
+  flex: 1;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: white;
+  box-shadow: 0 2px 4px #ddd;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 15px;
+}
+
+.card {
+  padding: 15px;
+  background: #f4f4f4;
+  border-radius: 8px;
+}
+
+.tasks {
+  padding: 15px;
+}
+
+.task-card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+}
+
+
+.task-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.task-form input {
+  flex: 1;
+  padding: 8px;
+}
+
+.filters button {
+  margin-right: 5px;
+}
+
+.filters .active {
+  background: black;
+  color: white;
+}
+
+.pending { background: orange; }
+.completed { background: green; color: white; }
+.overdue { background: red; color: white; }
