@@ -3,26 +3,35 @@ body {
   font-family: Arial, sans-serif;
 }
 
+.taskLogo {
+  height: 3em;
+}
+
 .app {
   display: flex;
 }
 
+/* Sidebar base styles */
 .sidebar {
-  width: 200px;
-  background: #111;
-  color: white;
+  background: #219ebc;
+  color: #ffff;
   min-height: 100vh;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .sidebar li {
   list-style: none;
   padding: 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 5px;
 }
 
 .sidebar .active {
-  background: #333;
+  background: #14213d;
 }
 
 .main {
@@ -51,9 +60,10 @@ body {
   border: 2px solid #f0f0f0;
 }
 
+/* Cards */
 .stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr;
   gap: 10px;
   padding: 15px;
 }
@@ -80,7 +90,6 @@ body {
   border-radius: 12px;
 }
 
-
 .task-form {
   display: flex;
   gap: 10px;
@@ -104,3 +113,94 @@ body {
 .pending { background: orange; }
 .completed { background: green; color: white; }
 .overdue { background: red; color: white; }
+
+/* Hamburger button (mobile) */
+.hamburger {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 6px;
+  background: #fff;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 1100;
+}
+.hamburger span {
+  display: block;
+  height: 3px;
+  background: #111;
+  border-radius: 2px;
+}
+
+/* Mobile-first: sidebar is overlay hidden by default */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 240px;
+  transform: translateX(-100%);
+  transition: transform 200ms ease-in-out;
+  z-index: 1200;
+}
+.sidebar.open {
+  transform: translateX(0);
+}
+.sidebar .label { display: inline; }
+.sidebar .icon { width: 18px; display:inline-block; text-align:center; }
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 1000;
+}
+
+/* Tablet: collapsed sidebar + stacked cards */
+@media (min-width: 768px) {
+  .hamburger { display: none; }
+  .sidebar {
+    position: static;
+    transform: none;
+    width: 60px;
+    padding: 12px;
+  }
+  .sidebar .label { display: none; }
+  .stats { grid-template-columns: 1fr; }
+}
+
+/* Desktop: full sidebar + cards grid */
+@media (min-width: 1024px) {
+  .sidebar { width: 200px; padding: 20px; }
+  .sidebar .label { display: inline; }
+  .stats { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Ensure interactive elements have comfortable hit target */
+button, .sidebar li {
+  min-height: 40px;
+}
+button:focus, .sidebar li:focus {
+  outline: 3px solid rgba(0,120,215,0.3);
+  outline-offset: 2px;
+}
+
+/* Ensure header content isn't hidden by the fixed hamburger on small screens */
+@media (max-width: 767px) {
+  .header {
+    padding-left: 64px;
+    margin-top: 5px;
+  }
+  .taskLogo {
+    display: inline-block;
+    margin-left: 4px;
+    height: 1.6em;
+    vertical-align: middle;
+  }
+}

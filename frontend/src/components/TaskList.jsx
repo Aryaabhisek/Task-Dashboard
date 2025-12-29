@@ -25,6 +25,22 @@ export default function TaskList({ setDashboardTasks }) {
     return task.status === filter;
   });
 
+  const colorMap = {
+    All: { bg: "#0d6efd", fg: "#ffffff" },
+    Pending: { bg: "#ffc107", fg: "#000000" },
+    Completed: { bg: "#198754", fg: "#ffffff" },
+  };
+
+  const baseBtn = {
+    padding: "10px 16px",
+    borderRadius: "5px",
+    border: "none",
+    cursor: "pointer",
+    marginRight: "8px",
+    minWidth: "140px",
+    textAlign: "center",
+  };
+
   const addTask = async (title) => {
     try {
       const newTask = await apiAddTask(title);
@@ -45,6 +61,19 @@ export default function TaskList({ setDashboardTasks }) {
     }
   };
 
+  const editTask = async (id) => {
+    try {
+      const existing = tasks.find((t) => t._id === id || t.id === id);
+      const newTitle = window.prompt("Edit task title", existing?.title || "");
+      if (newTitle == null) return; // cancelled
+      const updated = await updateTask(id, { title: newTitle });
+      setTasks((prev) => prev.map((t) => (t._id === id || t.id === id ? { ...t, title: updated.title || newTitle } : t)));
+      if (setDashboardTasks) setDashboardTasks(tasks.map((t) => (t._id === id || t.id === id ? { ...t, title: updated.title || newTitle } : t)));
+    } catch (err) {
+      console.error("Edit failed", err);
+    }
+  };
+
   const deleteTask = async (id) => {
     try {
       await apiDeleteTask(id);
@@ -61,15 +90,26 @@ export default function TaskList({ setDashboardTasks }) {
       <TaskForm onAdd={addTask} />
 
       <div className="filters">
-        {["All", "Pending", "Completed"].map((f) => (
-          <button key={f} onClick={() => setFilter(f)} className={filter === f ? "active" : ""}>
-            {f}
-          </button>
-        ))}
+        {["All", "Pending", "Completed"].map((f) => {
+          const colors = colorMap[f];
+          const activeStyle = { ...baseBtn, backgroundColor: colors.bg, color: colors.fg };
+          const inactiveStyle = { ...baseBtn, backgroundColor: "transparent", color: colors.bg, border: `1px solid ${colors.bg}` };
+          return (
+            <button key={f} onClick={() => setFilter(f)} style={filter === f ? activeStyle : inactiveStyle}>
+              {f}
+            </button>
+          );
+        })}
       </div>
 
       {filteredTasks.map((task) => (
-        <TaskCard key={task._id || task.id} task={task} onComplete={() => completeTask(task._id || task.id)} onDelete={() => deleteTask(task._id || task.id)} />
+        <TaskCard
+          key={task._id || task.id}
+          task={task}
+          onComplete={() => completeTask(task._id || task.id)}
+          onDelete={() => deleteTask(task._id || task.id)}
+          onEdit={() => editTask(task._id || task.id)}
+        />
       ))}
     </div>
   );
